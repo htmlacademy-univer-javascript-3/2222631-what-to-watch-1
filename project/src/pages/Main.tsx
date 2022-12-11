@@ -121,7 +121,7 @@ export function Main(props: OpenFilmProps){
           <div className='catalog__films-list'>
             {
               props.filmsListProps.map((item) =>
-                (<FilmCard key={item.title} title={item.title} imgLink={item.imgLink}/>))
+                (<FilmCard key={item.id.toString()} id={item.id} title={item.title} imgLink={item.imgLink}/>))
             }
           </div>
 

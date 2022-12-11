@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export function FilmCard(props: FilmCardProps){
   return (
@@ -10,15 +11,19 @@ export function FilmCard(props: FilmCardProps){
         />
       </div>
       <h3 className='small-film-card__title'>
-        <a className='small-film-card__link' href={'film-page.html'}>
+        <Link
+          to={`/films/${props.id}`}
+          className='small-film-card__link'
+        >
           { props.title }
-        </a>
+        </Link>
       </h3>
     </article>
   );
 }
 
 export type FilmCardProps = {
+  id: number;
   title: string;
   imgLink: string;
 }

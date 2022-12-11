@@ -1,12 +1,15 @@
 import React from 'react';
-import {OpenFilmProps} from './Main';
 import {VisuallyHidden} from '../components/VisuallyHidden';
 import {Header} from '../components/Header';
 import {FilmCard} from '../components/FilmCard';
 import {Footer} from '../components/Footer';
+import {useParams} from 'react-router-dom';
 
 
-export function Film(props: OpenFilmProps){
+export function Film(){
+  const params = useParams();
+  const id: number = +(params?.id ?? '-1');
+  const film = window.FilmsList[id - 1];
   return(
     <React.Fragment>
       <VisuallyHidden/>
@@ -51,8 +54,11 @@ export function Film(props: OpenFilmProps){
         <div className='film-card__wrap film-card__translate-top'>
           <div className='film-card__info'>
             <div className='film-card__poster film-card__poster--big'>
-              <img src={'img/the-grand-budapest-hotel-poster.jpg'} alt={props.title} width='218'
-                   height='327'/>
+              <img
+                src={'img/the-grand-budapest-hotel-poster.jpg'}
+                alt={film.title} width='218'
+                height='327'
+              />
             </div>
 
             <div className='film-card__desc'>
@@ -80,17 +86,22 @@ export function Film(props: OpenFilmProps){
 
               <div className='film-card__text'>
                 <p>In the 1930s, the Grand Budapest Hotel is a popular European ski resort, presided over by concierge
-                  Gustave H. (Ralph Fiennes). Zero, a junior lobby boy, becomes Gustave's friend and protege.</p>
+                  Gustave H. (Ralph Fiennes). Zero, a junior lobby boy, becomes Gustave{'&apos'}s friend and protege.
+                </p>
 
-                <p>Gustave prides himself on providing first-class service to the hotel's guests, including satisfying
-                  the sexual needs of the many elderly women who stay there. When one of Gustave's lovers dies
+                <p>Gustave prides himself on providing first-class service to the hotel{'&apos'}s guests, including satisfying
+                  the sexual needs of the many elderly women who stay there. When one of Gustave{'&apos'}s lovers dies
                   mysteriously, Gustave finds himself the recipient of a priceless painting and the chief suspect in her
-                  murder.</p>
+                  murder.
+                </p>
 
                 <p className='film-card__director'><strong>Director: Wes Anderson</strong></p>
 
-                <p className='film-card__starring'><strong>Starring: Bill Murray, Edward Norton, Jude Law, Willem Dafoe
-                  and other</strong></p>
+                <p className='film-card__starring'>
+                  <strong>
+                    Starring: Bill Murray, Edward Norton, Jude Law, Willem Dafoe and other
+                  </strong>
+                </p>
               </div>
             </div>
           </div>
@@ -102,10 +113,11 @@ export function Film(props: OpenFilmProps){
           <h2 className='catalog__title'>More like this</h2>
 
           <div className='catalog__films-list'>
-            {
-              props.filmsListProps.map((item) =>
-                <FilmCard key={item.title} title={item.title} imgLink={item.imgLink}/>)
-            }
+            <FilmCard
+              id={film.id}
+              title={film.title}
+              imgLink={film.imgLink}
+            />
           </div>
         </section>
 
