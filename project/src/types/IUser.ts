@@ -1,3 +1,3 @@
 export type IUser = {
-  isAuthorize: boolean
+  isAuthorize: boolean;
 }
