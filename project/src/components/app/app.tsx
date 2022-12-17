@@ -1,58 +1,70 @@
-import React, { Fragment } from 'react';
-import {Main} from '../../pages/Main';
-import {BrowserRouter, Link, Route, Routes} from 'react-router-dom';
-import {Film} from '../../pages/Film';
-import {AddReview} from '../../pages/AddReview';
-import {MyList} from '../../pages/MyList';
-import {Player} from '../../pages/Player';
-import {SignIn} from '../../pages/SignIn';
+import {Route, Routes} from 'react-router-dom';
+import {AppRoute} from '../../const';
+
+import history from '../../history';
+import HistoryRouter from '../history-route/history-route';
+
+import Main from '../../pages/main/main';
+import SignIn from '../../pages/sign-in/sign-in';
+import MyList from '../../pages/my-list/my-list';
+import Film from '../../pages/film/film';
+import Player from '../../pages/player/player';
+import NotFound from '../../pages/not-found/not-found';
+import AddReview from '../../pages/add-review/add-review';
+import AuthedUserRoute from '../authed-user-route/authed-user-route';
+
+import {useAppSelector} from '../../hooks';
+
+import {getAuthorizationStatus} from '../../store/user-meta-processor/selectors';
 
 function App(): JSX.Element {
+  const authStatus = useAppSelector(getAuthorizationStatus);
+
   return (
-    <BrowserRouter>
+    <HistoryRouter history={history}>
       <Routes>
         <Route
-          path='/'
-          element={
-            <Main
-              title={'The Grand Budapest Hotel'}
-              genre={'Drama'}
-              yearOfPromoRelease={2014}
-              filmsListProps={window.FilmsList}
-            />
-          }
+          path={AppRoute.Root}
+          element={<Main />}
         />
         <Route
-          path='/login'
-          element={<SignIn/>}
+          path={AppRoute.SignIn}
+          element={<SignIn />}
         />
-        <Route
-          path='/films/:id'
-        >
-          <Route index element={<Film/>} />
-          <Route path={'review'} element={<AddReview/>} />
+        <Route path={AppRoute.Film}>
+          <Route
+            path={':id'}
+            element={<Film />}
+          />
+          <Route
+            path={`:id${AppRoute.AddReview}`}
+            element={
+              <AuthedUserRoute authStatus={authStatus}>
+                <AddReview />
+              </AuthedUserRoute>
+            }
+          />
         </Route>
         <Route
-          path='/mylist'
+          path={AppRoute.MyList}
           element={
-            <MyList
-              films={window.FilmsList.slice(0, 9)}
-              user={{ isAuthorize: false }}
-            />
+            <AuthedUserRoute authStatus={authStatus}>
+              <MyList />
+            </AuthedUserRoute>
           }
         />
-        <Route path='/player/:id' element={<Player/>}/>
+        <Route path={AppRoute.Player}>
+          <Route
+            path={':id'}
+            element={<Player />}
+          />
+        </Route>
         <Route
-          path='*'
-          element={
-            <Fragment>
-              <h1>404 Page Not Found</h1>
-              <h2><Link to='/'>Main</Link></h2>
-            </Fragment>
-          }
+          path={'*'}
+          element={<NotFound />}
         />
       </Routes>
-    </BrowserRouter>
+    </HistoryRouter>
   );
 }
 
